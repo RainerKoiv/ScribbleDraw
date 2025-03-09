@@ -17,7 +17,7 @@ with gr.Blocks() as demo:
             style = gr.Dropdown(choices=["Realism", "Photorealistic CGI", "Impressionism", "Surrealism", "Pop Art", "Pixel Art", "Sketch & Ink Art", "Futurism", "Gothic", "Minimalism", "Anime"], label="Style", value="Realism", allow_custom_value=False)
             background = gr.Dropdown(choices=["None", "Natural", "Urban", "Studio Lighting", "Fantasy"], label="Background", value="None", allow_custom_value=False)
         with gr.Column():
-            out = gr.Image()
+            out = gr.Image(show_download_button=False)
             info_msg = gr.Textbox(label="Info", interactive=False)
     btn = gr.Button("Submit")
     btn.click(fn=enhance_image, inputs=[sketchpad, radio, style, background], outputs=[out, info_msg])
