@@ -1,6 +1,8 @@
 #from fastapi import FastAPI, UploadFile, File
 #from contextlib import asynccontextmanager
-#from PIL import Image
+import os
+from PIL import Image
+import time
 import numpy as np
 #import io
 import torch
@@ -140,7 +142,8 @@ def choose_style(object, style):
 
 def choose_background(background):
     backgrounds = {
-        "None": "A plain, minimal background.",
+        #"None": "A plain, minimal background.",
+        "None": "",
         #"Natural": "A background with elements of nature, evoking a peaceful and organic feel.",
         "Natural": "A natural environment with lush greenery, blue skies, and soft sunlight, evoking a peaceful and organic feel.",
         "Urban": "An urban setting with architectural elements, providing a sense of city life.",
@@ -161,10 +164,17 @@ def choose_background(background):
     }
     return backgrounds.get(background)
 
+def save_image(generated_image, path):
+    if not os.path.exists(path):
+        os.makedirs(path)
     
+    drawing_name = f"drawing_{int(time.time())}.png"
+    file_path = os.path.join(path, drawing_name)
+    generated_image.save(file_path)
+    print(f"Image saved to {file_path}")
 
 # Kasutab Florence't ja ControlNet'i
-def enhance_drawing(drawing, radio, style, background):
+def enhance_drawing(drawing, radio, style, background, canvas_size):
     t1 = time.time()
     # Annab tausta, layerid ja composite, võta joonis
     drawing = drawing["composite"]
@@ -172,13 +182,13 @@ def enhance_drawing(drawing, radio, style, background):
 
     # Check if the user has drawn anything
     sketch = True
-    info_msg = "Your drawing has been enhanced with the selected style and background."
+    info_msg = ""
     if drawing is None or np.sum(drawing) == 0:
-        info_msg = "You have not drawn anything. Generated a random scene with selected style and background."
+        info_msg = "You have not drawn anything. Generated a random scene with the selected style and background."
         sketch = False
     
     # Object
-    if radio == "Specific object" and sketch:
+    if radio == "Enhance one object" and sketch:
         # FLORENCE
         prompt = "<OD>"
         #prompt = "<CAPTION>"
@@ -192,11 +202,11 @@ def enhance_drawing(drawing, radio, style, background):
         #object = caption
 
         object = caption.get('<OD>', {}).get('labels', [])[0]
-        info_msg = f"Your drawing has been enhanced with the selected style and background. The AI detected the object as: {object}. If it's incorrect or weird, try modifying your drawing or select 'A specific scene'."
+        info_msg = f"Your drawing has been enhanced. The AI detected the object as: {object}. If it's not what you meant or it looks weird, try modifying your drawing or select 'A specific scene'."
         print(object)
 
     # Caption
-    if radio == "A specific scene" and sketch:
+    if radio == "Enhance multiple objects" and sketch:
         # Blip
         #caption1 = generate_caption(image)
         #print("cap1:", caption1)
@@ -205,11 +215,12 @@ def enhance_drawing(drawing, radio, style, background):
         prompt = "<CAPTION>"
         caption2 = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         extracted_caption = caption2.get("<CAPTION>")
+        info_msg = f"Your drawing has been enhanced. The AI generated the following caption: '{extracted_caption}'. If it's not what you meant, try modifiying your drawing."
         object = fix_prompt(extracted_caption)
         print("cap2",object)
 
     # Nothing
-    if radio == "A random scene" or not sketch:
+    if radio == "Generate a random scene from your drawing" or not sketch:
         object = ""
     
     style = choose_style(object, style)
@@ -222,8 +233,9 @@ def enhance_drawing(drawing, radio, style, background):
     "low quality, blurry, pixelated, ugly, glitch, error, duplicate, collage, jpeg artifacts"
 )
     t2 = time.time()
-    new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.0, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.8).images[0] #kontrolli kas strength ja guidance_scale mõjutavad, päris hea 0.7 ja 20.0 v 0.4, 15; 0.4 ja 8.5
+    new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.0, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.8, width=canvas_size[0], heigth=canvas_size[1]).images[0] #kontrolli kas strength ja guidance_scale mõjutavad, päris hea 0.7 ja 20.0 v 0.4, 15; 0.4 ja 8.5
     t3 = time.time()
+    save_image(new_image, "ScribbleDraw\images")
 
     print("Time taken for all steps: ", t3-t1)
     print("Time taken for image generation: ", t3-t2)
