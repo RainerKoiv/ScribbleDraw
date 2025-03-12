@@ -235,7 +235,9 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
     t2 = time.time()
     new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.0, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.8, width=canvas_size[0], heigth=canvas_size[1]).images[0] #kontrolli kas strength ja guidance_scale mõjutavad, päris hea 0.7 ja 20.0 v 0.4, 15; 0.4 ja 8.5
     t3 = time.time()
-    save_image(new_image, "ScribbleDraw\images")
+
+    path = "images"
+    save_image(new_image, path)
 
     print("Time taken for all steps: ", t3-t1)
     print("Time taken for image generation: ", t3-t2)
