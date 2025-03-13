@@ -185,10 +185,10 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
 
     # Check if the user has drawn anything
     sketch = True
-    info_msg = ""
+    info_msg = "\nTip: You can press 'Generate image' multiple times to see different results."
     object = ""
     if drawing is None or np.sum(drawing) == 0:
-        info_msg = "You have not drawn anything. Generated a random scene without semantic info."
+        info_msg = "You have not drawn anything. Generated a random scene without semantic info." + info_msg
         sketch = False
     
     # Object
@@ -206,7 +206,7 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
         #object = caption
 
         object = caption.get('<OD>', {}).get('labels', [])[0]
-        info_msg = f"Object class: {object}."
+        info_msg = f"Detected object class: {object}." + info_msg
         print(object)
 
     # Caption
@@ -219,13 +219,13 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
         prompt = "<CAPTION>"
         caption2 = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         extracted_caption = caption2.get("<CAPTION>")
-        info_msg = f"Scene description: '{extracted_caption}'."
+        info_msg = f"Generated scene description: '{extracted_caption}'." + info_msg
         object = fix_prompt(extracted_caption)
         print("cap2",object)
 
     # Nothing
     if radio == "Generate based on edges without semantic info" and sketch:
-        info_msg = "Generated a random scene based on edges without semantic info."
+        info_msg = "Generated a random scene based on edges without semantic info." + info_msg
 
     style = choose_style(object, style)
     background = choose_background(background)

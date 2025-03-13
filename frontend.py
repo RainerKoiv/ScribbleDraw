@@ -41,9 +41,6 @@ button[title="Draw button"] {
     background-color: orange !important;
     color: black !important;
     font-size: 20px !important;
-    font-weight: bold !important;
-    padding: 10px 20px !important;
-    border-radius: 5px !important;
 }
 
 .custom-markdown h1 {
@@ -99,14 +96,24 @@ with gr.Blocks(
             with gr.Row():
                 style = gr.Dropdown(choices=["Realism", "Photorealistic CGI", "Impressionism", "Surrealism", "Pop Art", "Pixel Art", "Sketch & Ink Art", "Futurism", "Gothic", "Minimalism", "Anime"], label="Style", value="Realism", allow_custom_value=False, elem_classes="custom-dropdown")
                 background = gr.Dropdown(choices=["None", "Natural", "Urban", "Studio Lighting", "Fantasy"], label="Background", value="None", allow_custom_value=False, elem_classes="custom-dropdown")
+            
+            btn = gr.Button(value="Generate image", elem_classes="submit-button")
+            gr.Markdown("## Contact Information")
+            with gr.Row(elem_classes="custom-footer"):
+                with gr.Column():
+                    gr.Markdown("**Author:** Rainer Kõiv")
+                    gr.Markdown("**Email:** `rainer.k6iv@gmail.com`")
+                with gr.Column():
+                    gr.Markdown("**Supervisor:** Ardi Tampuu, PhD")
+                    gr.Markdown("**Email:** `ardi.tampuu@ut.ee`")
         with gr.Column(
             scale=1
         ):
             out = gr.Image( width=800, height=620, show_download_button=False, label="Generated image", elem_classes="titles")
             info_msg = gr.Textbox(label="Info", interactive=False, elem_classes="custom-text")
-    btn = gr.Button(value="Submit", elem_classes="submit-button")
+   
     btn.click(fn=enhance_image, inputs=[sketchpad, radio, style, background], outputs=[out, info_msg])
-
+    
 demo.launch()
 
 
