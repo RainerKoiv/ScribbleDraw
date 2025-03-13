@@ -80,7 +80,7 @@ def fix_prompt(prompt):
         prompt = prompt.replace("A black and white", "")
     if "on a black background." in prompt:
         prompt = prompt.replace("on a black background.", "")
-    remove = ["white", "black", "drawing", "line", "sketch", "background", "outline"]
+    remove = ["white", "black", "drawing", "sketch", "background", "outline"]
     words = prompt.split()
     new_prompt = ""
     print(words)
@@ -186,12 +186,13 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
     # Check if the user has drawn anything
     sketch = True
     info_msg = ""
+    object = ""
     if drawing is None or np.sum(drawing) == 0:
-        info_msg = "You have not drawn anything. Generated a random scene with the selected style and background."
+        info_msg = "You have not drawn anything. Generated a random scene without semantic info."
         sketch = False
     
     # Object
-    if radio == "Enhance one object" and sketch:
+    if radio == "Detect object class and generate" and sketch:
         # FLORENCE
         prompt = "<OD>"
         #prompt = "<CAPTION>"
@@ -205,11 +206,11 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
         #object = caption
 
         object = caption.get('<OD>', {}).get('labels', [])[0]
-        info_msg = f"Your drawing has been enhanced. The AI detected the object as: {object}. If it's not what you meant or it looks weird, try modifying your drawing or select 'A specific scene'."
+        info_msg = f"Object class: {object}."
         print(object)
 
     # Caption
-    if radio == "Enhance multiple objects" and sketch:
+    if radio == "Describe the scene with VLM and generate" and sketch:
         # Blip
         #caption1 = generate_caption(image)
         #print("cap1:", caption1)
@@ -218,14 +219,14 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
         prompt = "<CAPTION>"
         caption2 = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         extracted_caption = caption2.get("<CAPTION>")
-        info_msg = f"Your drawing has been enhanced. The AI generated the following caption: '{extracted_caption}'. If it's not what you meant, try modifiying your drawing."
+        info_msg = f"Scene description: '{extracted_caption}'."
         object = fix_prompt(extracted_caption)
         print("cap2",object)
 
     # Nothing
-    if radio == "Generate a random scene from your drawing" or not sketch:
-        object = ""
-    
+    if radio == "Generate based on edges without semantic info" and sketch:
+        info_msg = "Generated a random scene based on edges without semantic info."
+
     style = choose_style(object, style)
     background = choose_background(background)
     prompt = style + background
