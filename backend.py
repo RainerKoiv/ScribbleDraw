@@ -164,11 +164,14 @@ def choose_background(background):
     }
     return backgrounds.get(background)
 
-def save_image(generated_image, path):
+def save_image(generated_image, path, original):
     if not os.path.exists(path):
         os.makedirs(path)
     
-    drawing_name = f"drawing_{int(time.time())}.png"
+    if original:
+        drawing_name = f"drawing_{int(time.time())}.png"
+    else:
+        drawing_name = f"enhanced_drawing_{int(time.time())}.png"
     file_path = os.path.join(path, drawing_name)
     generated_image.save(file_path)
     print(f"Image saved to {file_path}")
@@ -237,7 +240,10 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
     t3 = time.time()
 
     path = "images"
-    save_image(new_image, path)
+    original = True
+    save_image(image, path, original)
+    original = False
+    save_image(new_image, path, original)
 
     print("Time taken for all steps: ", t3-t1)
     print("Time taken for image generation: ", t3-t2)
