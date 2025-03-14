@@ -85,7 +85,7 @@ with gr.Blocks(
     css=custom_css
 ) as demo:
     gr.Markdown("# Scribble Draw", elem_classes="custom-markdown")
-    gr.Markdown(value="Draw an image on the sketchpad and let the AI detect and enhance your image. Select the generation task type, choose a style and optionally a background, click 'Submit'.", elem_classes="custom-markdown")
+    gr.Markdown(value="Draw something on the sketchpad and let the AI detect and enhance your image. Select the generation task type, choose a style and optionally a background, click 'Generate image'.", elem_classes="custom-markdown")
     with gr.Row():
         with gr.Column(
             scale=1
