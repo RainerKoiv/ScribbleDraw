@@ -9,11 +9,6 @@ def enhance_image(sketchpad, radio, style, background):
 
 
 custom_css = """
-.sketchpad {
-    padding-top: 10px !important;
-    padding-bottom: -10px !important;
-}
-
 /* Toolbar buttons */
 button[title="View in full screen"],
 button[title="Exit full screen"],
@@ -25,7 +20,7 @@ button[title="Draw button"] {
     background-color: orange !important;
     width: 40px !important;
     height: 40px !important;
-    font-size: 18px !important;
+    font-size: 20px !important;
     color: black !important;
 }
 
@@ -34,7 +29,7 @@ button[title="Transform button"] {
 }
 
 button[title="Draw button"] {
-    margin-right: 10px !important;
+    margin-right: 15px !important;
 }
 
 .submit-button {
@@ -51,6 +46,13 @@ button[title="Draw button"] {
 }
 .custom-markdown p {
     font-size: 20px !important;
+}
+
+.custom-markdown-footer h1 {
+    font-size: 20px !important;
+}
+.custom-markdown-footer p {
+    font-size: 18px !important;
 }
 
 .titles label {
@@ -90,7 +92,7 @@ with gr.Blocks(
         with gr.Column(
             scale=1
         ):
-            sketchpad = gr.Sketchpad(width=800, height=620, canvas_size=(768, 512), type='numpy', layers=False, brush=gr.Brush(default_size=5, colors=["#000000"], color_mode="fixed"), label="Sketchpad", elem_classes=["sketchpad", "titles"])
+            sketchpad = gr.Sketchpad(width=800, height=660, canvas_size=(768, 512), type='numpy', layers=False, brush=gr.Brush(default_size=5, colors=["#000000"], color_mode="fixed"), label="Sketchpad", elem_classes=["sketchpad", "titles"])
             radio = gr.Radio(["Detect object class and generate", "Describe the scene with VLM and generate", "Generate based on edges without semantic info"], value="Detect object class and generate", interactive=True, 
                              label = "Generation task type", elem_classes="custom-radio")
             with gr.Row():
@@ -98,19 +100,21 @@ with gr.Blocks(
                 background = gr.Dropdown(choices=["None", "Natural", "Urban", "Studio Lighting", "Fantasy"], label="Background", value="None", allow_custom_value=False, elem_classes="custom-dropdown")
             
             btn = gr.Button(value="Generate image", elem_classes="submit-button")
-            gr.Markdown("## Contact Information")
-            with gr.Row(elem_classes="custom-footer"):
-                with gr.Column():
-                    gr.Markdown("**Author:** Rainer Kõiv")
-                    gr.Markdown("**Email:** `rainer.k6iv@gmail.com`")
-                with gr.Column():
-                    gr.Markdown("**Supervisor:** Ardi Tampuu, PhD")
-                    gr.Markdown("**Email:** `ardi.tampuu@ut.ee`")
+
         with gr.Column(
             scale=1
         ):
-            out = gr.Image( width=800, height=620, show_download_button=False, label="Generated image", elem_classes="titles")
+            out = gr.Image( width=800, height=660, show_download_button=False, label="Generated image", elem_classes="titles")
             info_msg = gr.Textbox(label="Info", interactive=False, elem_classes="custom-text")
+
+            gr.Markdown("# Contact Information", elem_classes="custom-markdown-footer")
+            with gr.Row(elem_classes="custom-footer"):
+                with gr.Column():
+                    gr.Markdown("**Author:** Rainer Kõiv", elem_classes="custom-markdown-footer")
+                    gr.Markdown("**Email:** `rainer.k6iv@gmail.com`", elem_classes="custom-markdown-footer")
+                with gr.Column():
+                    gr.Markdown("**Supervisor:** Ardi Tampuu, PhD", elem_classes="custom-markdown-footer")
+                    gr.Markdown("**Email:** `ardi.tampuu@ut.ee`", elem_classes="custom-markdown-footer")
    
     btn.click(fn=enhance_image, inputs=[sketchpad, radio, style, background], outputs=[out, info_msg])
     
