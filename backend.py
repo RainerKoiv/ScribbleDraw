@@ -50,6 +50,11 @@ pipe.enable_model_cpu_offload()
 model = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-large", torch_dtype=torch_dtype, trust_remote_code=True).to(device)
 processor = AutoProcessor.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True)
 
+# Florence 2 uus
+#model = AutoModelForCausalLM.from_pretrained("MiaoshouAI/Florence-2-base-PromptGen-v1.5", torch_dtype=torch_dtype, trust_remote_code=True).to(device)
+#processor = AutoProcessor.from_pretrained("MiaoshouAI/Florence-2-base-PromptGen-v1.5", trust_remote_code=True)
+
+
 hed = HEDdetector.from_pretrained('lllyasviel/Annotators')
 #hed = HEDdetector.from_pretrained('control_v11p_sd15_scribble') # vajab autentimist
 
@@ -237,7 +242,7 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
     "low quality, blurry, pixelated, ugly, glitch, error, duplicate, collage, jpeg artifacts"
 )
     t2 = time.time()
-    new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.0, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.8, width=canvas_size[0], heigth=canvas_size[1]).images[0] #kontrolli kas strength ja guidance_scale mõjutavad, päris hea 0.7 ja 20.0 v 0.4, 15; 0.4 ja 8.5
+    new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.5, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.9, width=canvas_size[0], heigth=canvas_size[1]).images[0] #kontrolli kas strength ja guidance_scale mõjutavad, päris hea 0.7 ja 20.0 v 0.4, 15; 0.4 ja 8.5; controlnet_conditioning_scale=0.8
     t3 = time.time()
 
     path = "images"
