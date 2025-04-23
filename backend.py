@@ -1,7 +1,9 @@
 #from fastapi import FastAPI, UploadFile, File
 #from contextlib import asynccontextmanager
 import os
-from PIL import Image
+from PIL import Image, ImageOps
+import matplotlib.pyplot as plt
+import cv2
 import time
 import numpy as np
 #import io
@@ -30,15 +32,34 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
-# Load BLIP model for captioning
-blip_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
+# Load BLIP model for captioning - ebatäpsem kui florence
+#blip_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+#blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
 
-# Load BLIP-2 processor and model
+# Load BLIP-2 processor and model - võtab palju ressurssi
 #blip_processor = Blip2Processor.from_pretrained("Salesforce/blip2-opt-2.7b")
 #blip_model = Blip2ForConditionalGeneration.from_pretrained(
 #    "Salesforce/blip2-opt-2.7b", torch_dtype=torch_dtype
 #).to(device)
+
+#controlnet sdxl-1.0 - kasutab 15.5 GB mälu ja 100% GPU - aeg 2 min
+"""from diffusers import ControlNetModel, StableDiffusionXLControlNetPipeline, AutoencoderKL
+from diffusers import DDIMScheduler, EulerAncestralDiscreteScheduler
+eulera_scheduler = EulerAncestralDiscreteScheduler.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", subfolder="scheduler")
+controlnet = ControlNetModel.from_pretrained(
+    "xinsir/controlnet-scribble-sdxl-1.0",
+    torch_dtype=torch.float16
+)
+vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
+
+pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-xl-base-1.0",
+    controlnet=controlnet,
+    vae=vae,
+    safety_checker=None,
+    torch_dtype=torch.float16,
+    scheduler=eulera_scheduler,
+).to("cuda")"""
 
 # Controlnet
 controlnet = ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-scribble", torch_dtype=torch.float16)
@@ -182,10 +203,16 @@ def save_image(generated_image, path, original):
     print(f"Image saved to {file_path}")
 
 # Kasutab Florence't ja ControlNet'i
-def enhance_drawing(drawing, radio, style, background, canvas_size):
+def enhance_drawing(sketchpad, radio, style, background, canvas_size):
     t1 = time.time()
     # Annab tausta, layerid ja composite, võta joonis
-    drawing = drawing["composite"]
+    drawing = sketchpad["composite"]
+ 
+
+    #blurred = cv2.GaussianBlur(drawing, (9, 9), 0)
+    #kernel = np.ones((3,3), np.uint8)  # Adjust size for thicker/thinner removal
+    #fixed_image = cv2.erode(drawing, kernel, iterations=1)  # Remove thin lines
+ 
     image = hed(drawing, scribble=False) # scribble=True päris pildi puhul
 
     # Check if the user has drawn anything
@@ -242,6 +269,15 @@ def enhance_drawing(drawing, radio, style, background, canvas_size):
     "low quality, blurry, pixelated, ugly, glitch, error, duplicate, collage, jpeg artifacts"
 )
     t2 = time.time()
+    """ new_image = pipe(
+        prompt,
+        negative_prompt=negative_prompt,
+        image=image,
+        controlnet_conditioning_scale=1.0,
+        width=canvas_size[0],
+        height=canvas_size[1],
+        num_inference_steps=30,
+    ).images[0] """
     new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.5, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.9, width=canvas_size[0], heigth=canvas_size[1]).images[0] #kontrolli kas strength ja guidance_scale mõjutavad, päris hea 0.7 ja 20.0 v 0.4, 15; 0.4 ja 8.5; controlnet_conditioning_scale=0.8
     t3 = time.time()
 
