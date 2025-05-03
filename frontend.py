@@ -3,8 +3,8 @@ import gradio as gr
 import numpy as np
 
 def enhance_image(sketchpad, radio, style, background):
-    canvas_size = (768, 512) # 768x512 pikslit
-    enhanced_image, message = backend.enhance_drawing(sketchpad, radio, style, background, canvas_size) # kutsub backendist pilditäiendusfunktsiooni
+    canvas_size = (768, 512) # 768x512 pixel canvas size
+    enhanced_image, message = backend.enhance_drawing(sketchpad, radio, style, background, canvas_size) # enhance_drawing function from backend.py
     return enhanced_image, message 
 
 
@@ -119,13 +119,3 @@ with gr.Blocks(
     btn.click(fn=enhance_image, inputs=[sketchpad, radio, style, background], outputs=[out, info_msg])
     
 demo.launch()
-
-
-#gr.Interface(
-#    fn=enhance_image,
-#    inputs=gr.Sketchpad(canvas_size=(512,512), type='numpy', layers=False, brush=gr.Brush(default_size="auto", colors=["#000000"], color_mode="fixed")),
-#    style=gr.Dropdown(["natural background", "anime style", "realistic"], label="Style"),
-#    outputs="image",
-#    #outputs="textbox", testi objekti tuvastust
-#    title="Scribble Draw"
-#).launch()

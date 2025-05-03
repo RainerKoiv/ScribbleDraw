@@ -1,0 +1,3 @@
+Generated prompts:
+Generated scene description: 'a white star on a black background' - 1746281647
+Detected object class: airplane - 1746281676
