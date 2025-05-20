@@ -5,14 +5,14 @@ Project supervisor: Ardi Tampuu
 
 This project was developed as a BSc final thesis. The accompanying demo application is intended for display at the Institute of Computer Science, Delta Building, University of Tartu, Estonia.
 
-The demo allows users to create simple sketches and enhance them using AI-powered image generation. Users can choose a generation mode (task type), the desired visual style and a background. 
-The users drawing will be processed with a ControlNet model. A VLM will detect an object or generate a description for the drawing. A new image will be generated based on the users drawing and the generated description.
+The demo allows users to create simple sketches and enhance them using AI-powered image generation. Users can choose a generation mode (task type), a desired visual style, and a background. 
+The user's drawing will be processed with a ControlNet model. A VLM (Vision-Language Model) will detect an object or generate a description based on the drawing. A new image will then be generated based on the user's sketch and the generated description.
 
 
 ## Screenshots
 User Interface
 
-![image](https://github.com/user-attachments/assets/ff7b60b8-2d64-4060-aae3-6961faaddbef)
+![image](https://github.com/user-attachments/assets/4144c35d-0062-40a0-bdb1-63ea02d288dd)
 
 
 Example (processed) inputs and outputs
