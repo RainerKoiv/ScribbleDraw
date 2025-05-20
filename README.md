@@ -19,6 +19,10 @@ Example (processed) inputs and outputs
 
 ![image](https://github.com/user-attachments/assets/bb863385-c2b0-4026-981a-dc19a27677bc)
 
+## Demo video
+https://github.com/user-attachments/assets/c249b028-c3db-4011-9c9c-7bea1d14491d
+
+
 
 ## Installation
 Requirements:
