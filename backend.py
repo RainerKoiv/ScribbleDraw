@@ -147,7 +147,7 @@ def enhance_drawing(sketchpad, radio, style, background, canvas_size):
         prompt = "<OD>"
         caption = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         object = caption.get('<OD>', {}).get('labels', [])[0]
-        info_msg = f"Detected object class: {object}." + info_msg
+        info_msg = f"Detected object class: {object}" + info_msg
 
     # Caption
     if radio == "Describe the scene with VLM and generate" and sketch:
@@ -155,7 +155,7 @@ def enhance_drawing(sketchpad, radio, style, background, canvas_size):
         prompt = "<CAPTION>"
         caption2 = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         extracted_caption = caption2.get("<CAPTION>")
-        info_msg = f"Generated scene description: '{extracted_caption}'." + info_msg
+        info_msg = f"Generated scene description: '{extracted_caption}'" + info_msg
         object = fix_prompt(extracted_caption)
 
     # Nothing
