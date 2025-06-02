@@ -32,6 +32,8 @@ button[title="Draw button"] {
     margin-right: 15px !important;
 }
 
+footer {visibility: hidden;}
+
 .submit-button {
     background-color: orange !important;
     color: black !important;
