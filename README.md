@@ -40,7 +40,7 @@ How to get started:
     - pip install controlnet_aux
     - pip install diffusers transformers accelerate
     - pip install mediapipe
-    - pip install --upgrade gradio
+    - pip install gradio==5.15.0
 - Run the front-end: ``python3 frontend.py``, wait for it to download everything and open the local URL given in the terminal
 
 ## Usage
