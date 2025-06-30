@@ -15,7 +15,7 @@ Release 2.0.0 is a simplified version and customized to be displayed at the AHHA
 User Interface (version 2.0.0)
 
 English
-![image](https://github.com/user-attachments/assets/48f2dc44-a652-4e14-ac26-c0f4fe69fa4c)
+![image](https://github.com/user-attachments/assets/4994b9a3-59b8-4895-a06e-a43683aa6cf3)
 
 Estonian
 ![image](https://github.com/user-attachments/assets/8c37fea9-2ae9-4da3-adaa-761f5b4710fc)
