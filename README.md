@@ -8,18 +8,24 @@ This project was developed as a BSc final thesis. The accompanying demo applicat
 The demo allows users to create simple sketches and enhance them using AI-powered image generation. Users can choose a generation mode (task type), a desired visual style, and a background. 
 The user's drawing will be processed with a ControlNet model. A VLM (Vision-Language Model) will detect an object or generate a description based on the drawing. A new image will then be generated based on the user's sketch and the generated description.
 
+Release 1.0.0 is the first version developed as the final thesis.
+Release 2.0.0 is a simplified version and customized to be displayed at the AHHAA AI exhibit and also the Delta Center.
 
 ## Screenshots
-User Interface
+User Interface (version 2.0.0)
 
-![image](https://github.com/user-attachments/assets/4144c35d-0062-40a0-bdb1-63ea02d288dd)
+English
+![image](https://github.com/user-attachments/assets/48f2dc44-a652-4e14-ac26-c0f4fe69fa4c)
+
+Estonian
+![image](https://github.com/user-attachments/assets/8c37fea9-2ae9-4da3-adaa-761f5b4710fc)
 
 
 Example (processed) inputs and outputs
 
 ![image](https://github.com/user-attachments/assets/bb863385-c2b0-4026-981a-dc19a27677bc)
 
-## Demo video
+## Demo video (version 1.0.0)
 https://github.com/user-attachments/assets/c249b028-c3db-4011-9c9c-7bea1d14491d
 
 
@@ -34,6 +40,7 @@ Requirements:
 
 How to get started:
 - Clone the repo
+    - If you are interested in the first version, then checkout to branch with the tag 1.0.0
 - Activate python virtual environment ``source .venv/bin/activate`` and go into the project folder
 - First time installations:
     - pip install diffusers["torch"] transformers
@@ -41,18 +48,17 @@ How to get started:
     - pip install diffusers transformers accelerate
     - pip install mediapipe
     - pip install gradio==5.15.0
-- Run the front-end: ``python3 frontend.py``, wait for it to download everything and open the local URL given in the terminal
+- Run the front-end: ``uvicorn frontend:app --reload``, wait for it to download everything and open the local URL (http://127.0.0.1:8000) given in the terminal
 
 ## Usage
-The UI is divided into two sides:
+The project version 2.0.0 UI is divided into two sides:
   - Left side (inputs):
     - Sketchpad - user can draw a picture
-    - Generation tast type - image will be generated based on object detection, scene description or without semantic info
-    - Style and background options
+    - Style buttons - user can select the desired style
     - Generate Image button
   - Right side (outputs):
-    - Generated image
-    - Additional info about the detected object or scene description
+    - Generated image with the selected style
+    - Additional info about the scene description and some tips
 
 ## Models Used
 
