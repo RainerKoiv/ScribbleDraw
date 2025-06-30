@@ -32,7 +32,7 @@ def get_translations(lang):
             "info": "Info",
             "read_more": "Read more:",
             "qr_code": "static/qr-en.png",
-            "logo": "static/arvutiteaduse_instituut_eng_blue_long.svg"
+            "logo": "static/arvutiteaduse_instituut_eng_sinine.svg"
         },
         "et": {
             "title": "# Scribble Draw",
