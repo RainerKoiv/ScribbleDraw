@@ -189,7 +189,7 @@ def enhance_drawing(sketchpad, radio, style, background, canvas_size, lang):
     "low quality, blurry, pixelated, ugly, watermark, error, duplicate, collage, jpeg artifacts"
     )
     t2 = time.time()
-    new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.5, num_inference_steps=30, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.9, width=canvas_size[0], heigth=canvas_size[1]).images[0]
+    new_image = pipe(prompt, image, strength=0.35, guidance_scale=7.5, num_inference_steps=40, negative_prompt=negative_prompt, controlnet_conditioning_scale=0.9, width=canvas_size[0], heigth=canvas_size[1]).images[0]
     t3 = time.time()
 
     output_folder = "images" # Change this!

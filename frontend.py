@@ -165,7 +165,7 @@ footer {visibility: hidden;}
 .style-btn {
     background-size: cover;
     width: 180px;
-    height: 120px;
+    height: 140px;
     border: none;
     outline: none;
     cursor: pointer;
