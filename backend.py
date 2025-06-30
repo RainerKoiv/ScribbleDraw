@@ -76,7 +76,8 @@ def choose_style(object, style):
         "Futurism": f"A high-tech, futuristic interpretation of {object}, with neon lights, sleek metallic surfaces, and a sense of movement. The artwork features advanced technology, cyberpunk elements, and a futuristic cityscape.",
         "Gothic": f"A dark and moody gothic illustration of {object}, with high contrast lighting, intricate Victorian-inspired details, and a sense of mystery. The atmosphere is eerie and dramatic, evoking gothic horror themes.",
         "Minimalism": f"A minimalist and clean depiction of {object}, with simple shapes, flat colors, and little to no extra detail, creating a modern, stylish aesthetic.",
-        "Anime": f"A vibrant and expressive anime-style illustration of {object}, featuring smooth shading, large expressive eyes, and dynamic character design. The colors are bright, with detailed backgrounds and action-oriented composition, inspired by Japanese animation."
+        "Anime": f"A vibrant and expressive anime-style illustration of {object}, featuring smooth shading, large expressive eyes, and dynamic character design. The colors are bright, with detailed backgrounds and action-oriented composition, inspired by Japanese animation.",
+        "Fantasy": f"A magical and enchanting fantasy illustration of {object}, set in a mystical world with mythical creatures, vibrant colors, and a sense of wonder. The scene is filled with fantastical elements like glowing lights, ethereal landscapes, and whimsical details."
     }
     return styles.get(style)
 
@@ -126,7 +127,7 @@ def save_image(image, new_image, output_folder, output_file, info_msg):
 
 # MAIN FUNCTION
 # Uses Florence-2-large, ControlNet and Stable Diffusion
-def enhance_drawing(sketchpad, radio, style, background, canvas_size):
+def enhance_drawing(sketchpad, radio, style, background, canvas_size, lang):
     t1 = time.time()
     # Gives background, layers and composite, take composite
     drawing = sketchpad["composite"]
@@ -135,10 +136,16 @@ def enhance_drawing(sketchpad, radio, style, background, canvas_size):
 
     # Check if the user has drawn anything
     sketch = True
-    info_msg = "\nTip: You can press 'Generate image' multiple times to see different results. If you see floating objects, try coloring the object in."
+    info_msg1_eng = "Selected style: " + style + ".\n"
+    info_msg2_eng = "\nTip: If you see floating lines, try coloring the object in."
+    info_msg1_est = "Valitud stiil: " + style + ".\n"
+    info_msg2_est = "\nVihje: Kui näed \"hõljuvaid\" jooni, proovi joonistatud objekti seest värviga täita."
     object = ""
     if drawing is None or np.sum(drawing) == 0:
-        info_msg = "You have not drawn anything. Generated a random scene without semantic info." + info_msg
+        if lang == "en":
+            info_msg = info_msg1_eng + "You have not drawn anything. Generated a random scene with the selected style." + info_msg2_eng
+        else:
+            info_msg = info_msg1_est + "Sa pole midagi joonistanud. Genereerisin juhusliku stseeni valitud stiilis." + info_msg2_est
         sketch = False
     
     # Object
@@ -147,7 +154,10 @@ def enhance_drawing(sketchpad, radio, style, background, canvas_size):
         prompt = "<OD>"
         caption = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         object = caption.get('<OD>', {}).get('labels', [])[0]
-        info_msg = f"Detected object class: {object}" + info_msg
+        if lang == "en":
+            info_msg = info_msg1_eng + f"Detected object class: {object}" + info_msg2_eng
+        else:
+            info_msg = info_msg1_est + f"Tuvastatud objekti klass: {object}" + info_msg2_est
 
     # Caption
     if radio == "Describe the scene with VLM and generate" and sketch:
@@ -155,12 +165,19 @@ def enhance_drawing(sketchpad, radio, style, background, canvas_size):
         prompt = "<CAPTION>"
         caption2 = run_example(prompt, image=image, processor=processor, model=model, device=device, torch_dtype=torch_dtype)
         extracted_caption = caption2.get("<CAPTION>")
-        info_msg = f"Generated scene description: '{extracted_caption}'" + info_msg
+        if lang == "en":
+            info_msg = info_msg1_eng + f"AI interpretation of your drawing: '{extracted_caption}'" + info_msg2_eng
+        else:
+            info_msg = info_msg1_est + f"AI tõlgendus kritseldusele: '{extracted_caption}'" + info_msg2_est
+            
         object = fix_prompt(extracted_caption)
 
     # Nothing
     if radio == "Generate based on edges without semantic info" and sketch:
-        info_msg = "Generated a random scene based on edges without semantic info." + info_msg
+        if lang == "en":
+            info_msg = info_msg1_eng + "Generated a random scene based on edges without semantic info." + info_msg2_eng
+        else:
+            info_msg = info_msg1_est + "Joonistasin ainult jooni arvestades juhusliku stseeni ilma semantilise infota." + info_msg2_est
 
     style = choose_style(object, style)
     background = choose_background(background)
