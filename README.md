@@ -34,7 +34,7 @@ https://github.com/user-attachments/assets/c249b028-c3db-4011-9c9c-7bea1d14491d
 ## Installation
 Requirements:
 - High performance GPU, like Nvidia RTX 3060ti or 3080
-- Pytorch, CUDA toolkit (12.8), cuDNN 12.x
+- Pytorch, CUDA toolkit (12.8), cuDNN 12.x. Follow the guides:
    - Windows: https://www.youtube.com/watch?v=r7Am-ZGMef8
    - Linux: https://www.youtube.com/watch?v=c0Z_ItwzT5o
 - Python 3 (3.12.7)
@@ -42,13 +42,17 @@ Requirements:
 How to get started:
 - Clone the repo
     - If you are interested in the first version, then checkout to branch with the tag 1.0.0
-- Create and activate python virtual environment ``python3 -m venv .venv`` and ``source .venv/bin/activate`` and go into the project folder
+- Create and activate python virtual environment ``python3 -m venv .venv`` and ``source .venv/bin/activate`` 
+- Go into the project folder
 - First time installations:
     - pip install diffusers["torch"] transformers
     - pip install controlnet_aux
     - pip install mediapipe
     - pip install gradio==5.15.0
 - Run the front-end: ``uvicorn frontend:app --reload``, wait for it to download everything and open the local URL (http://127.0.0.1:8000) given in the terminal
+    - NB! Gradio has a bug where it may freeze and give a server error. A way to fix it is to install a specific version of pydantic: ``pip install pydantic==2.10.6``
+    - You can also try gradio=5.20.0, but newer versions have a different sketchpad layout
+    - For version 1.0.0 use ``python3 frontend.py``
 
 ## How to use
 The project version 2.0.0 UI is divided into two sides:
