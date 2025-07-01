@@ -9,7 +9,8 @@ The demo allows users to create simple sketches and enhance them using AI-powere
 The user's drawing will be processed with a ControlNet model. A VLM (Vision-Language Model) will detect an object or generate a description based on the drawing. A new image will then be generated based on the user's sketch and the generated description.
 
 Release 1.0.0 is the first version developed as the final thesis.
-Release 2.0.0 is a simplified version and customized to be displayed at the AHHAA AI exhibit and also the Delta Center.
+
+Release 2.0.0 is a simplified version and customized to be displayed at the AHHAA AI exhibit and also the Delta Center. This version only keeps the caption generation and combines the style and background options.
 
 ## Screenshots
 User Interface (version 2.0.0)
@@ -34,23 +35,22 @@ https://github.com/user-attachments/assets/c249b028-c3db-4011-9c9c-7bea1d14491d
 Requirements:
 - High performance GPU, like Nvidia RTX 3060ti or 3080
 - Pytorch, CUDA toolkit (12.8), cuDNN 12.x
-   - https://www.youtube.com/watch?v=r7Am-ZGMef8
-   - https://www.youtube.com/watch?v=c0Z_ItwzT5o
+   - Windows: https://www.youtube.com/watch?v=r7Am-ZGMef8
+   - Linux: https://www.youtube.com/watch?v=c0Z_ItwzT5o
 - Python 3 (3.12.7)
 
 How to get started:
 - Clone the repo
     - If you are interested in the first version, then checkout to branch with the tag 1.0.0
-- Activate python virtual environment ``source .venv/bin/activate`` and go into the project folder
+- Create and activate python virtual environment ``python3 -m venv .venv`` and ``source .venv/bin/activate`` and go into the project folder
 - First time installations:
     - pip install diffusers["torch"] transformers
     - pip install controlnet_aux
-    - pip install diffusers transformers accelerate
     - pip install mediapipe
     - pip install gradio==5.15.0
 - Run the front-end: ``uvicorn frontend:app --reload``, wait for it to download everything and open the local URL (http://127.0.0.1:8000) given in the terminal
 
-## Usage
+## How to use
 The project version 2.0.0 UI is divided into two sides:
   - Left side (inputs):
     - Sketchpad - user can draw a picture
